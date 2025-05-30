@@ -1,0 +1,11 @@
+{
+	"dependencies": {
+		"@auth/d1-adapter": "^1.9.1",
+		"@cloudflare/kv-asset-handler": "^0.4.0",
+		"drizzle-orm": "^0.44.0",
+		"next-auth": "^4.24.11"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20250529.0"
+	}
+}
