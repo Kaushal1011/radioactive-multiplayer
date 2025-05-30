@@ -11,11 +11,14 @@ import {
 	type Mode,
 } from "./physics";
 import { type ClientMsg, type ServerMsg } from "./types";
+import { users, rooms } from './db/schema';
+import { sql } from 'drizzle-orm';
 
+import { drizzle } from 'drizzle-orm/d1';
 // ---------------------------------------------
 // Ticking constants
 // ---------------------------------------------
-const TICK_HZ = 10;
+const TICK_HZ = 15;
 const DT = 1 / TICK_HZ;
 
 // ---------------------------------------------
@@ -27,6 +30,7 @@ interface RoomState {
 	ready: Set<string>;
 	sockets: Map<string, WebSocket>; // key → socket
 	interval: number | null;
+	trackName: string; // for debugging
 }
 
 export class RoomDO implements DurableObject {
@@ -41,6 +45,7 @@ export class RoomDO implements DurableObject {
 			ready: new Set(),
 			sockets: new Map(),
 			interval: null,
+			trackName: '',
 		};
 	}
 
@@ -50,7 +55,21 @@ export class RoomDO implements DurableObject {
 	async fetch(_req: Request): Promise<Response> {
 		const [client, server] = Object.values(new WebSocketPair());
 		server.accept();
-		await this.ensureTrack('monza');
+
+		const url = new URL(_req.url);
+		const pathnameParts = url.pathname.split('/');
+
+		// Assuming URL is like /api/room/<roomId>/ws
+		const roomId = pathnameParts[pathnameParts.length - 2]; // "abc123" in /api/room/abc123/ws
+
+		console.log('Room ID in DO:', roomId);
+		// fetch track name from kv
+		const db = drizzle((this.env as any).RADIOACTIVE_DB);
+		const room = await db.select().from(rooms).where(sql`${rooms.id} = ${roomId}`).get();
+
+		if (room) {
+			this.room.trackName = room.track;
+		}
 		// Until we get the real playerId we store socket under temp guid
 		const tempId = crypto.randomUUID();
 		this.room.sockets.set(tempId, server);
@@ -81,27 +100,34 @@ export class RoomDO implements DurableObject {
 			// Player joins a room; msg may include trackId
 			// -----------------------------------------
 			case "join": {
-				const { playerId, trackId = "default" } = msg as any;
+				const { playerId, trackId = "monza" } = msg as any;
+
+				console.log("Player join:", playerId, "track:", trackId);
+
+				// console.log("Current room state:", this.room);
 
 				// Lazily load track from KV if not yet loaded
-
+				await this.ensureTrack(this.room.trackName || trackId);
 
 				const ws = this.room.sockets.get(sockKey)!;
 				// Re‑associate socket with real playerId
-				this.room.sockets.delete(sockKey);
-				this.room.sockets.set(playerId, ws);
+				if (ws) {
+					this.room.sockets.delete(sockKey);
+					this.room.sockets.set(playerId, ws);
+				}
 
 				if (!this.room.players.has(playerId)) {
 					const p = new Player();
 					p.id = playerId;
 					p.ws = ws;
 					this.room.players.set(playerId, p);
-				} else {
-					// Reconnect: just patch socket reference
-					this.room.players.get(playerId)!.ws = ws;
 				}
 
+				// console.log(this.room);
+
 				this.broadcastState();
+
+
 				break;
 			}
 
@@ -114,6 +140,7 @@ export class RoomDO implements DurableObject {
 			}
 
 			case "input": {
+				console.log("Player input:", msg.playerId, msg.input);
 				const p = this.room.players.get(msg.playerId);
 				if (p && msg.input) p.command(msg.input as Mode);
 				break;
@@ -125,7 +152,8 @@ export class RoomDO implements DurableObject {
 	// Competitive physics loop
 	// -------------------------------------------------
 	private maybeStart() {
-		// console.log(this.room);
+		console.log(this.room);
+		console.log("maybeStart called");
 		if (this.room.interval) return; // already running
 		if (!this.room.track) return; // no map yet
 		if (this.room.ready.size !== this.room.players.size || this.room.players.size === 0) return;

@@ -20,7 +20,8 @@ type Env = {
 const app = new Hono<{ Bindings: Env }>();
 
 app.use('/api/*', cors({
-	origin: 'http://localhost:3000',          // must match EXACTLY
+	// origin: 'https://ra-frontend.pages.dev',          // must match EXACTLY
+	origin: 'http://localhost:3000',
 	credentials: true,                        // allow credentials
 	allowHeaders: ['Authorization', 'Content-Type'],
 	allowMethods: ['GET', 'POST', 'OPTIONS'],
@@ -37,6 +38,10 @@ app.post('/api/register', async (c) => {
 
 	try {
 		const user = await clerkClient.users.getUser(authV?.userId || '');
+
+		if (!c.env.RADIOACTIVE_DB) {
+			throw new Error("RADIOACTIVE_DB is not bound. Check wrangler.toml and environment.");
+		}
 
 		const db = drizzle(c.env.RADIOACTIVE_DB);
 
@@ -131,6 +136,23 @@ app.post('/api/room', async (c) => {
 		createdAt: Date.now(),
 	}).run();
 	return c.json({ roomId });
+});
+
+app.get('/api/room/:id', async (c) => {
+	const { id } = c.req.param();
+	// get room details from D1
+	const db = drizzle(c.env.RADIOACTIVE_DB);
+	const room = await db.select().from(rooms).where(sql`${rooms.id} = ${id}`).get();
+	if (!room) {
+		return c.json({ error: 'Room not found' }, 404);
+	}
+	return c.json({
+		id: room.id,
+		track: room.track,
+		laps: room.laps,
+		createdBy: room.createdBy,
+		createdAt: new Date(room.createdAt).toISOString(),
+	});
 });
 
 /* ---------- websocket upgrade ---------- */

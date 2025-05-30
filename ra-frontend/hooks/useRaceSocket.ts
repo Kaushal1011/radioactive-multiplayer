@@ -52,7 +52,7 @@ export function useRaceSocket(roomId: string) {
 		console.log("useRaceSocket: roomId changed to", roomId);
 		if (!roomId) return;
 
-		const url = `http://localhost:8787/api/room/${roomId}/ws`;
+		const url = `${process.env.NEXT_PUBLIC_API_URL}/api/room/${roomId}/ws`;
 		console.log("Connecting to WebSocket:", url);
 		const ws = new WebSocket(url);
 		wsRef.current = ws;

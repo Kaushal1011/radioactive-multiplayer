@@ -12,7 +12,7 @@
 export const g = 9.81;                      // gravity (m s⁻²) – reserved for future grip calcs
 
 const ACCEL_RATE = 10;                      // m s⁻² constant propulsion
-const BRAKE_RATE = 20;                      // m s⁻² constant braking
+const BRAKE_RATE = 30;                      // m s⁻² constant braking
 const MAX_SPEED = 90;                      // m s⁻¹  ≈ 324 km h⁻¹
 const MIN_SPEED = 5;                       // m s⁻¹  stall‑avoid
 const BRAKE_ZONE_VMAX = 45;                 // m s⁻¹  (≈ 162 km h⁻¹) speed cap in BRAKE zones
@@ -158,6 +158,18 @@ export class Player {
 		// Clamp speed limits
 		vmax = Math.min(MAX_SPEED, Math.max(MIN_SPEED, vmax));
 
+		/* ---- speed limits ---- for modes calc */
+		switch (this.mode) {
+			case 'BASE':
+				vmax = vmax; // no change
+				break;
+			case 'PUSH':
+				vmax = (sec.zone === Zone.ACCEL) ? vmax * PUSH_VMAX_STRAIGHT : vmax * PUSH_VMAX_BRAKE;
+				break;
+			case 'CONSERVE':
+				vmax *= 0.90; // 10% slower
+				break;
+		}
 		/* ---- simple accel / brake rules ---- */
 		if (sec.zone === Zone.ACCEL) {
 			if (this.v < vmax) this.v = Math.min(vmax, this.v + accel * dt);

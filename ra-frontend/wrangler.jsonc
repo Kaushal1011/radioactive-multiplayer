@@ -1,0 +1,13 @@
+{
+  "name": "ra-frontend",
+  "compatibility_date": "2024-09-23",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "pages_build_output_dir": ".vercel/output/static",
+  "vars" : {
+		"NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY":"pk_test_c2ltcGxlLWdyaWZmb24tNzguY2xlcmsuYWNjb3VudHMuZGV2JA",
+		"CLERK_SECRET_KEY":"sk_test_vPkf85IbM8v4Ny3VaKQSguhaEizUgprwAS2r8JtPmS",
+    "NEXT_PUBLIC_API_URL":"https://radioactive-backend.kaushalpatil10.workers.dev"
+	}
+}
