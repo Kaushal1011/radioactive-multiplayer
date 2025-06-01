@@ -63,8 +63,29 @@ export function RoomForm() {
 
 					<select className="rounded-md border bg-background p-2" value={track} onChange={(e) => setTrack(e.target.value)}>
 						<option value="monza">Monza</option>
-						<option value="monaco">Monaco</option>
+						<option value="shanghai">Shanghai</option>
 						<option value="suzuka">Suzuka</option>
+						<option value="spa">Spa</option>
+						{/* zandovoort*/}
+						<option value="zandvoort">Zandvoort</option>
+						<option value="yasmarina">Yas Marina</option>
+						{/* sao paulo */}
+						<option value="saopaulo">São Paulo</option>
+						{/* silverstone */}
+						<option value="silverstone">Silverstone</option>
+						{/* spielberg */}
+						<option value="spielberg">Spielberg</option>
+						{/* catalunya */}
+						<option value="catalunya">Catalunya</option>
+						{/* sakhir */}
+						<option value="sakhir">Sakhir</option>
+						{/* melbourne */}
+						<option value="melbourne">Melbourne</option>
+						{/* budapest */}
+						<option value="budapest">Budapest</option>
+						{/* austin */}
+						<option value="austin">Austin</option>
+						{/* imola */}
 					</select>
 
 					<Input
