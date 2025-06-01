@@ -41,7 +41,7 @@ const randColor = () => `hsl(${Math.floor(Math.random() * 360)} 80% 60%)`;
 /* ------------------------------------------------------------------
    useRaceSocket – the simplest possible WebSocket hook
 ------------------------------------------------------------------- */
-export function useRaceSocket(roomId: string) {
+export function useRaceSocket(roomId: string, countdownFunc?: (t: number) => void) {
 	const [cars, setCars] = useState<Record<string, PlayerSnapshot>>({});
 	const [ready, setReady] = useState(false);
 
@@ -82,6 +82,9 @@ export function useRaceSocket(roomId: string) {
 					case "countdown":
 						// handle countdown if needed
 						console.log("Countdown:", msg.t);
+						if (countdownFunc) {
+							countdownFunc(msg.t);
+						}
 						break;
 
 					default:

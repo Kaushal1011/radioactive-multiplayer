@@ -21,8 +21,20 @@ export default function RacePage({ params }: Props) {
 	const [readySent, setReadySent] = useState(false);
 	const [roomId123, setRoomId] = useState<string>('');
 	const [track, setTrack] = useState<string>('monza'); // default track
+	const [countdownDisplay, setCountdownDisplay] = useState<number | null>(null);
+
+	function countdownFunc(t: number) {
+		console.log('Countdown:', t);
+		// display countdown in UI
+		if (t <= 0) {
+			setCountdownDisplay(null); // hide countdown
+		} else {
+			setCountdownDisplay(t);
+		}
+	}
+
 	/* --- live game state via WS hook --------------------------- */
-	const { cars, ready, send } = useRaceSocket(roomId123);
+	const { cars, ready, send } = useRaceSocket(roomId123, countdownFunc);
 	const me = userId ? cars[userId] : undefined;
 	useEffect(() => {
 		if (!ready) return;
@@ -63,6 +75,12 @@ export default function RacePage({ params }: Props) {
 
 	return (
 		<div className="flex min-h-screen flex-col bg-gradient-to-b from-black via-neutral-950 to-black">
+			{countdownDisplay !== null && (
+				<div className="fixed top-20 left-1/2 -translate-x-1/2 transform text-6xl font-bold text-white z-50 bg-black/0 px-6 py-2 rounded-xl shadow-xl">
+					{countdownDisplay}
+				</div>
+			)}
+
 			<Navbar />
 
 			{/* header */}
