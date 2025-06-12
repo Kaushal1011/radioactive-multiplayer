@@ -10,7 +10,8 @@ import PlayersList from '@/components/PlayersList';
 import TelemetryBar from '@/components/TelemetryBar';
 import TrackCanvas from '@/components/TrackCanvas';
 import { useRaceSocket } from '@/hooks/useRaceSocket';
-import Footer from '@/components/footer';
+import ResultsOverlay from '@/components/ResultsOverlay';
+import { useRouter } from 'next/navigation';
 
 type Props = {
 	params: Promise<{ roomId: string }>; // <- Next.js injects this
@@ -23,6 +24,11 @@ export default function RacePage({ params }: Props) {
 	const [roomId123, setRoomId] = useState<string>('');
 	const [track, setTrack] = useState<string>('monza'); // default track
 	const [countdownDisplay, setCountdownDisplay] = useState<number | null>(null);
+	const [showResults, setShowResults] = useState(false);
+	const Router = useRouter();
+	// ensure roomId is set correctly
+
+	const [curLap, setCurLap] = useState(0); // current lap counter
 
 	function countdownFunc(t: number) {
 		console.log('Countdown:', t);
@@ -35,7 +41,7 @@ export default function RacePage({ params }: Props) {
 	}
 
 	/* --- live game state via WS hook --------------------------- */
-	const { cars, ready, send } = useRaceSocket(roomId123, countdownFunc);
+	const { cars, standings, maxLaps, ready, send } = useRaceSocket(roomId123, countdownFunc);
 	const me = userId ? cars[userId] : undefined;
 	useEffect(() => {
 		if (!ready) return;
@@ -44,6 +50,27 @@ export default function RacePage({ params }: Props) {
 		console.log('Joining room:', roomId, 'as user:', userId);
 		send({ type: 'join', playerId: userId });
 	}, [ready]);
+
+	useEffect(() => {
+		if (!showResults && standings.length > 0 && standings.every((s) => s.finished)) {
+			setShowResults(true); // pop the modal
+		}
+	}, [standings, showResults]);
+
+	useEffect(() => {
+		if (!userId) return;
+		console.log('User ID:', userId);
+		// set userId in the socket hook
+
+		//  find me in standings
+		const myStanding = standings.find((s) => s.id === userId);
+		if (myStanding) {
+			setCurLap(myStanding.lap || 0); // update current lap from standings
+			console.log('My current lap:', myStanding.lap);
+		} else {
+			console.warn('My userId not found in standings:', userId);
+		}
+	}, [standings, userId]);
 
 	useEffect(() => {
 		if (!roomId) return;
@@ -92,22 +119,34 @@ export default function RacePage({ params }: Props) {
 						Ready
 					</Button>
 				</div>
+				<div className="flex items-center gap-2">
+					Lap {curLap} / {maxLaps ?? '--'}
+				</div>
+
 				<span className="text-sm text-muted-foreground">Room {roomId}</span>
 			</header>
 
 			{/* main grid */}
-			<div className="grid flex-1 grid-cols-[260px_1fr_220px] grid-rows-[1fr_auto] gap-4 p-4">
+			<div className="grid flex-1 grid-cols-[260px_1fr_360px] grid-rows-[1fr_auto] gap-4 p-4">
 				<CommandPanel onSend={handleRadio} />
 
 				<Suspense fallback={<div className="rounded bg-neutral-900/40" />}>
 					{ready ? <TrackCanvas track={track} cars={cars} /> : null}
 				</Suspense>
 
-				{ready && me ? <PlayersList cars={cars} meId={userId ?? undefined} /> : null}
+				{ready && me ? <PlayersList cars={cars} standings={standings} maxLaps={maxLaps} meId={userId ?? undefined} /> : null}
 				<div className="col-span-3">
 					<TelemetryBar car={me} />
 				</div>
 			</div>
+
+			<ResultsOverlay
+				open={showResults}
+				standings={standings}
+				onClose={() => {
+					Router.push('/dashboard'); // redirect to dashboard on close
+				}}
+			/>
 
 			{/* debug info */}
 		</div>

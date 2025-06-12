@@ -69,6 +69,7 @@ export function useRaceSocket(roomId: string, countdownFunc?: (t: number) => voi
 	const [cars, setCars] = useState<Record<string, PlayerSnapshot>>({});
 	const [ready, setReady] = useState(false);
 	const [standings, setStandings] = useState<Standings[]>([]);
+	const [maxLaps, setMaxLaps] = useState<number>(0); // max laps
 
 	const wsRef = useRef<WebSocket | null>(null);
 
@@ -103,6 +104,7 @@ export function useRaceSocket(roomId: string, countdownFunc?: (t: number) => voi
 						});
 						setCars(msg.players);
 						setStandings(msg.standings);
+						setMaxLaps(msg.maxLaps || 0); // update max laps
 
 						break;
 
@@ -140,5 +142,5 @@ export function useRaceSocket(roomId: string, countdownFunc?: (t: number) => voi
 		}
 	}, []);
 
-	return { cars, ready, send };
+	return { cars, standings, maxLaps, ready, send };
 }

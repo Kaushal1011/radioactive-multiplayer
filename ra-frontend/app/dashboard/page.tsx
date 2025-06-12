@@ -1,9 +1,12 @@
 import { currentUser } from '@clerk/nextjs/server';
-import { RoomForm } from '@/components/room-form';
+import RoomForm from '@/components/room-form';
 import Footer from '@/components/footer';
+import { redirect } from 'next/navigation';
 
 export default async function Dashboard() {
 	const user = await currentUser();
+
+	if (!user) redirect('/sign-in?redirect_url=/dashboard');
 
 	return (
 		<div className="flex flex-col" style={{ minHeight: '91dvh' }}>

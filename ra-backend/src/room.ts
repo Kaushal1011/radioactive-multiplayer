@@ -18,7 +18,7 @@ import { drizzle } from 'drizzle-orm/d1';
 // ---------------------------------------------
 // Ticking constants
 // ---------------------------------------------
-const TICK_HZ = 15;
+const TICK_HZ = 30; // 30 ticks per second
 const DT = 1 / TICK_HZ;
 
 // ---------------------------------------------
@@ -84,6 +84,7 @@ export class RoomDO implements DurableObject {
 
 		if (room) {
 			this.room.trackName = room.track;
+			this.room.maxLaps = room.laps || 30; // default to 30 laps if not set
 		}
 		// Until we get the real playerId we store socket under temp guid
 		const tempId = crypto.randomUUID();
@@ -188,6 +189,7 @@ export class RoomDO implements DurableObject {
 		const track = this.room.track;
 		if (!track) return;
 
+
 		for (const pl of this.room.players.values()) {
 			if (pl.finished) continue;     // skip cars that already took flag
 			pl.step(track, DT);
@@ -200,6 +202,7 @@ export class RoomDO implements DurableObject {
 			if (pl.lap >= this.room.maxLaps) {
 				pl.finished = true;
 			}
+
 		}
 
 		// ------------ recompute standings ------------
