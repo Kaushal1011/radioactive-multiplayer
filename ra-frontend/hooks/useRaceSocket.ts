@@ -10,7 +10,7 @@ export type ClientMsg =
 	| { type: "input"; playerId: string; input: InputType };
 
 export type ServerMsg =
-	| { type: "state"; players: Record<string, PlayerSnapshot>; trackLoaded: boolean }
+	| { type: "state"; players: Record<string, PlayerSnapshot>; trackLoaded: boolean; standings: Standings[], maxLaps: number }
 	| { type: "countdown"; t: number }
 
 export interface PlayerSnapshot {
@@ -21,6 +21,30 @@ export interface PlayerSnapshot {
 	ers: number; // energy recovery system (ERS) charge
 	mode: InputType; // current driving mode
 }
+
+/*
+{
+	"standings": [
+		{
+			"id": "user_2yIFrLmzszEayA8Od0LJecmvvLT",
+			"lap": 0,
+			"progress": 1081.7333333333336,
+			"totalDist": 1081.7333333333336,
+			"finished": false
+		}
+	],
+	"maxLaps": 30
+}
+*/
+
+export interface Standings {
+	id: string;
+	lap: number;
+	progress: number; // distance covered in meters
+	totalDist: number; // total distance of the track in meters
+	finished: boolean; // true if the player
+}
+
 
 function djb2(str: string) {
 	let h = 5381;
@@ -44,6 +68,7 @@ const randColor = () => `hsl(${Math.floor(Math.random() * 360)} 80% 60%)`;
 export function useRaceSocket(roomId: string, countdownFunc?: (t: number) => void) {
 	const [cars, setCars] = useState<Record<string, PlayerSnapshot>>({});
 	const [ready, setReady] = useState(false);
+	const [standings, setStandings] = useState<Standings[]>([]);
 
 	const wsRef = useRef<WebSocket | null>(null);
 
@@ -77,6 +102,8 @@ export function useRaceSocket(roomId: string, countdownFunc?: (t: number) => voi
 							}
 						});
 						setCars(msg.players);
+						setStandings(msg.standings);
+
 						break;
 
 					case "countdown":

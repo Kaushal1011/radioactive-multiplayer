@@ -24,6 +24,15 @@ const DT = 1 / TICK_HZ;
 // ---------------------------------------------
 // Internal room state
 // ---------------------------------------------
+
+interface Standing {
+	id: string;
+	lap: number;            // completed laps
+	progress: number;       // metres into current lap
+	totalDist: number;      // lap * trackLen + progress  (for sorting)
+	finished: boolean;
+}
+
 interface RoomState {
 	track: Track | null;
 	players: Map<string, Player>;
@@ -31,7 +40,11 @@ interface RoomState {
 	sockets: Map<string, WebSocket>; // key → socket
 	interval: number | null;
 	trackName: string; // for debugging
+	standings: Standing[];
+	maxLaps: number;
 }
+
+
 
 export class RoomDO implements DurableObject {
 	private env: Env;
@@ -46,6 +59,8 @@ export class RoomDO implements DurableObject {
 			sockets: new Map(),
 			interval: null,
 			trackName: '',
+			standings: [],
+			maxLaps: 30, // default max laps
 		};
 	}
 
@@ -174,7 +189,40 @@ export class RoomDO implements DurableObject {
 		if (!track) return;
 
 		for (const pl of this.room.players.values()) {
+			if (pl.finished) continue;     // skip cars that already took flag
 			pl.step(track, DT);
+
+			// ------------ lap counting ------------
+			const newLap = Math.floor(pl.d / track.total);
+			if (newLap > pl.lap) pl.lap = newLap;
+
+			// ------------ chequered flag ------------
+			if (pl.lap >= this.room.maxLaps) {
+				pl.finished = true;
+			}
+		}
+
+		// ------------ recompute standings ------------
+		const arr: Standing[] = [];
+		for (const pl of this.room.players.values()) {
+			const progress = ((pl.d % track.total) + track.total) % track.total;
+			arr.push({
+				id: pl.id,
+				lap: pl.lap,
+				progress,
+				totalDist: pl.lap * track.total + progress,
+				finished: pl.finished,
+			});
+		}
+		arr.sort((a, b) => b.totalDist - a.totalDist);
+		this.room.standings = arr;
+
+		// race done? stop timer
+		if (arr.every(s => s.finished)) {
+			if (this.room.interval) {
+				clearInterval(this.room.interval);
+				this.room.interval = null;
+			}
 		}
 
 		this.broadcastState();
@@ -222,13 +270,14 @@ export class RoomDO implements DurableObject {
 			type: "state",
 			trackLoaded: !!this.room.track,
 			players: Object.fromEntries(
-				[...this.room.players.values()].map((p) => [
+				[...this.room.players.values()].map(p => [
 					p.id,
-					{ x: p.x, y: p.y, v: p.v, ers: p.ers, mode: p.mode },
+					{ x: p.x, y: p.y, v: p.v, ers: p.ers, mode: p.mode }
 				])
 			),
-		} as ServerMsg;
-
+			standings: this.room.standings,      // << NEW – already ordered
+			maxLaps: this.room.maxLaps           // optional UI convenience
+		};
 		this.broadcast(payload);
 	}
 

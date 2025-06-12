@@ -114,8 +114,11 @@ export class Player {
 	id = '';
 	ws: WebSocket | null = null;
 	d = 0; v = 0; x = 0; y = 0;
+	lap = 0;                 // completed full laps
+	finished = false;
 	// Position & kinematics
 	// Game state
+
 	ers = ERS_CAP;
 	mode: Mode = 'BASE';
 

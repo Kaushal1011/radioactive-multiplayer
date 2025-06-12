@@ -10,6 +10,7 @@ import PlayersList from '@/components/PlayersList';
 import TelemetryBar from '@/components/TelemetryBar';
 import TrackCanvas from '@/components/TrackCanvas';
 import { useRaceSocket } from '@/hooks/useRaceSocket';
+import Footer from '@/components/footer';
 
 type Props = {
 	params: Promise<{ roomId: string }>; // <- Next.js injects this
@@ -107,6 +108,8 @@ export default function RacePage({ params }: Props) {
 					<TelemetryBar car={me} />
 				</div>
 			</div>
+
+			{/* debug info */}
 		</div>
 	);
 }
