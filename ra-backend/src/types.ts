@@ -21,5 +21,6 @@ interface Standing {
 	progress: number;       // metres into current lap
 	totalDist: number;      // lap * trackLen + progress  (for sorting)
 	finished: boolean;
+	finishedAt?: number | null; // timestamp when finished
 }
 

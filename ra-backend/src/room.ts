@@ -31,6 +31,7 @@ interface Standing {
 	progress: number;       // metres into current lap
 	totalDist: number;      // lap * trackLen + progress  (for sorting)
 	finished: boolean;
+	finishedAt?: number | null; // timestamp when finished
 }
 
 interface RoomState {
@@ -201,6 +202,7 @@ export class RoomDO implements DurableObject {
 			// ------------ chequered flag ------------
 			if (pl.lap >= this.room.maxLaps) {
 				pl.finished = true;
+				pl.finishedAt = Date.now(); // timestamp when finished
 			}
 
 		}
@@ -215,9 +217,21 @@ export class RoomDO implements DurableObject {
 				progress,
 				totalDist: pl.lap * track.total + progress,
 				finished: pl.finished,
+				finishedAt: pl.finished ? pl.finishedAt : null
 			});
 		}
-		arr.sort((a, b) => b.totalDist - a.totalDist);
+		// sort by finished at timestamp, then by total distance
+		arr.sort((a, b) => {
+			if (a.finished && b.finished) {
+				return (a.finishedAt || 0) - (b.finishedAt || 0) || b.totalDist - a.totalDist;
+			} else if (b.finished) {
+				return 1; // a finished, b not
+			} else if (a.finished) {
+				return -1; // b finished, a not
+			} else {
+				return b.totalDist - a.totalDist; // both not finished, sort by distance
+			}
+		});
 		this.room.standings = arr;
 
 		// race done? stop timer

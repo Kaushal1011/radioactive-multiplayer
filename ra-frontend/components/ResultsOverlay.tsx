@@ -20,7 +20,8 @@ export default function ResultsOverlay({ open, standings, onClose }: Props) {
 	const { userId } = useAuth();
 
 	/* ---------- order by performance ---------- */
-	const sorted = [...standings].sort((a, b) => (a.lap !== b.lap ? b.lap - a.lap : b.progress - a.progress));
+	//  standings is already sorted by leaderboard position
+	const sorted = standings;
 	const winner = sorted[0];
 
 	/* ---------- row helpers ---------- */

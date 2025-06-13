@@ -43,6 +43,7 @@ export interface Standings {
 	progress: number; // distance covered in meters
 	totalDist: number; // total distance of the track in meters
 	finished: boolean; // true if the player
+	finishedAt?: number | null; // timestamp when finished, if applicable
 }
 
 
