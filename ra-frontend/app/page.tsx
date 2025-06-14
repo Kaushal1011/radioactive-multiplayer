@@ -203,3 +203,5 @@ export default function LandingPage() {
 		</>
 	);
 }
+
+export const runtime = 'edge'; // use edge runtime for faster response times

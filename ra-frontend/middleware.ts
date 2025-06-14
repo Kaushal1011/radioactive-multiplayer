@@ -13,13 +13,13 @@ const isPublic = createRouteMatcher([
 export default clerkMiddleware(async (auth, req) => {
   if (isPublic(req)) return;          // public route → no auth needed
 
-  console.log('Middleware: checking auth for', req.nextUrl.pathname);
+  // console.log('Middleware: checking auth for', req.nextUrl.pathname);
 
   /* ---- protected routes ---- */
   const { userId } = await auth();
 
   if (!userId) {
-    console.log('Middleware: no userId found, redirecting to sign-in');
+    // console.log('Middleware: no userId found, redirecting to sign-in');
     // redirect guests to our fancy gate, preserving where they wanted to go
     const target = new URL('/please-sign', req.url);
     target.searchParams.set('redirect_to', req.nextUrl.pathname);

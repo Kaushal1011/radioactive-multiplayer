@@ -31,7 +31,7 @@ export default function RacePage({ params }: Props) {
 	const [curLap, setCurLap] = useState(0); // current lap counter
 
 	function countdownFunc(t: number) {
-		console.log('Countdown:', t);
+		// console.log('Countdown:', t);
 		// display countdown in UI
 		if (t <= 0) {
 			setCountdownDisplay(null); // hide countdown
@@ -59,14 +59,14 @@ export default function RacePage({ params }: Props) {
 
 	useEffect(() => {
 		if (!userId) return;
-		console.log('User ID:', userId);
+		// console.log('User ID:', userId);
 		// set userId in the socket hook
 
 		//  find me in standings
 		const myStanding = standings.find((s) => s.id === userId);
 		if (myStanding) {
 			setCurLap(myStanding.lap || 0); // update current lap from standings
-			console.log('My current lap:', myStanding.lap);
+			// console.log('My current lap:', myStanding.lap);
 		} else {
 			console.warn('My userId not found in standings:', userId);
 		}

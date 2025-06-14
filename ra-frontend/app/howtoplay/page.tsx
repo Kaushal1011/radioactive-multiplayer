@@ -154,3 +154,5 @@ export default function HowToPlay() {
 		</>
 	);
 }
+
+export const runtime = 'edge';
