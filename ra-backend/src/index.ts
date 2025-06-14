@@ -20,7 +20,7 @@ type Env = {
 const app = new Hono<{ Bindings: Env }>();
 
 const allowedOrigins = [
-	'http://radioactive.dev',
+	'https://radioactive.dev',
 	'https://ra-frontend.pages.dev',
 	'https://www.radioactive.dev',
 ];

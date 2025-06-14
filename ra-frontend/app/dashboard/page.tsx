@@ -20,3 +20,5 @@ export default async function Dashboard() {
 		</div>
 	);
 }
+
+export const runtime = 'edge'; // use edge runtime for faster response times
