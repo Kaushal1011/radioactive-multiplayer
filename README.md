@@ -2,7 +2,7 @@
 
 Radioactive is a real-time multiplayer racing game platform built with a modern web stack.
 
-Live Demo: [radioactive multiplayer racing game](https://ra-frontend.pages.dev/)
+Live Demo: [radioactive multiplayer racing game](https://radioactive.dev/)
 
 
 ## Monorepo Structure
