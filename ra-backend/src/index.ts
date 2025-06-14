@@ -19,9 +19,15 @@ type Env = {
 
 const app = new Hono<{ Bindings: Env }>();
 
+const allowedOrigins = [
+	'http://radioactive.dev',
+	'https://ra-frontend.pages.dev',
+	'https://www.radioactive.dev',
+];
+
 app.use('/api/*', cors({
-	// origin: 'https://ra-frontend.pages.dev',          // must match EXACTLY
-	origin: 'http://localhost:3000',
+	origin: allowedOrigins,          // must match EXACTLY
+	// origin: 'http://localhost:3000',
 	credentials: true,                        // allow credentials
 	allowHeaders: ['Authorization', 'Content-Type'],
 	allowMethods: ['GET', 'POST', 'OPTIONS'],

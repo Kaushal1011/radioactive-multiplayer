@@ -1,15 +1,11 @@
 /* app/auth-required/page.tsx */
 'use client';
 
-import { SignInButton, SignUpButton } from '@clerk/nextjs';
-import { useSearchParams } from 'next/navigation';
 import { Navbar } from '@/components/navbar';
-import { Button } from '@/components/ui/button';
+
 import { Flag } from 'lucide-react';
 
 export default function PleaseSign() {
-	const params = useSearchParams();
-
 	return (
 		<>
 			<Navbar />

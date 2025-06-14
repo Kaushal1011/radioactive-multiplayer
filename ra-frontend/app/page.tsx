@@ -43,7 +43,7 @@ export default function LandingPage() {
 						Own the&nbsp;<span className="text-red-600">strategy</span>,<br /> rule the&nbsp;race.
 					</h1>
 					<p className="mt-6 text-lg text-zinc-300">
-						<span className="font-semibold text-white">Radioactive</span> is an online, real-time Formula-1 strategy game.
+						<span className="font-semibold text-white">Radioactive</span> is an online, real-time racing radio strategy game.
 						Call the shots, deploy ERS, and out-think rivals lap after lap.
 					</p>
 

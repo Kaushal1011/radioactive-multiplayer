@@ -11,8 +11,6 @@ import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import ReactCountryFlag from 'react-country-flag';
 
-import type { FC } from 'react';
-
 export const TRACKS = [
 	{ id: 'monza', iso: 'IT', name: 'Monza' },
 	{ id: 'shanghai', iso: 'CN', name: 'Shanghai' },

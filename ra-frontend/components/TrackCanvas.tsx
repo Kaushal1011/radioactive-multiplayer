@@ -67,6 +67,7 @@ export default function TrackCanvas({ track, cars, positions }: Props) {
 		ctx.beginPath();
 		trackPts.forEach(([x, y], i) => {
 			const [px, py] = scale(x, y, w, h);
+			// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 			i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
 		});
 		ctx.stroke();
@@ -89,6 +90,7 @@ export default function TrackCanvas({ track, cars, positions }: Props) {
 		ctx.beginPath();
 		trackPts.forEach(([x, y], i) => {
 			const [px, py] = scale(x, y, w, h);
+			// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 			i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
 		});
 		ctx.stroke();

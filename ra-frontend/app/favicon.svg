@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="2 0 20 20" fill="none" stroke="#FF3131" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <title>Radioactive</title>
+  <!-- semi‑circular gauge arc -->
+  <path d="M20.05 13a8 8 0 1 0-16.1 0" />
+  <!-- gauge needle -->
+  <line x1="12" y1="12" x2="17" y2="13.5" />
+  <!-- pivot dot -->
+  <circle cx="12" cy="12" r="1.5" fill="#FF3131" stroke="none" />
+</svg>

@@ -2,7 +2,7 @@
 
 import { Navbar } from '@/components/navbar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Users, LogIn, AlarmClock, Radio, Activity, Flame, Zap, Leaf, Gauge, Flag } from 'lucide-react';
+import { LogIn, AlarmClock, Radio, Activity, Flame, Zap, Leaf, Gauge, Flag } from 'lucide-react';
 import Footer from '@/components/footer';
 export default function HowToPlay() {
 	return (
@@ -24,15 +24,15 @@ export default function HowToPlay() {
 					<Card>
 						<CardHeader className="flex flex-row items-center gap-3 pb-2 text-xl font-semibold">
 							<LogIn className="h-6 w-6 text-red-600" />
-							1. Create or Join a Room
+							1. Create or Join a Room
 						</CardHeader>
 						<CardContent className="space-y-3 text-zinc-300">
 							<p>
 								Head to the <span className="font-medium text-white">Dashboard</span> and either generate a new room with a
-								track &amp; lap count or paste a friend's code to join.
+								track &amp; lap count or paste a friend&apos;s code to join.
 							</p>
 							<p className="text-sm text-zinc-400">
-								Tracks include classics like Monza, Suzuka, and Silverstone — each pre-analysed for corner severity &amp;
+								Tracks include classics like Monza, Suzuka, and Silverstone — each pre-analysed for corner severity &amp;
 								width.
 							</p>
 						</CardContent>
@@ -42,7 +42,7 @@ export default function HowToPlay() {
 					<Card>
 						<CardHeader className="flex flex-row items-center gap-3 pb-2 text-xl font-semibold">
 							<AlarmClock className="h-6 w-6 text-red-600" />
-							2. Ready Up &amp; Countdown
+							2. Ready Up &amp; Countdown
 						</CardHeader>
 						<CardContent className="space-y-3 text-zinc-300">
 							<p>
@@ -51,8 +51,8 @@ export default function HowToPlay() {
 								at&nbsp30&nbsp;Hz.
 							</p>
 							<p className="text-sm text-zinc-400">
-								Your car launches at the track's start-line with default <span className="font-medium text-white">BASE</span>{' '}
-								mode.
+								Your car launches at the track&apos;s start-line with default{' '}
+								<span className="font-medium text-white">BASE</span> mode.
 							</p>
 						</CardContent>
 					</Card>
