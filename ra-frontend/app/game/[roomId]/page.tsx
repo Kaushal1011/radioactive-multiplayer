@@ -43,13 +43,13 @@ export default function RacePage({ params }: Props) {
 	/* --- live game state via WS hook --------------------------- */
 	const { cars, standings, maxLaps, ready, send } = useRaceSocket(roomId123, countdownFunc);
 	const me = userId ? cars[userId] : undefined;
-	useEffect(() => {
-		if (!ready) return;
+        useEffect(() => {
+                if (!ready || !roomId || !userId) return;
 
-		// send join message to server
-		console.log('Joining room:', roomId, 'as user:', userId);
-		send({ type: 'join', playerId: userId });
-	}, [ready]);
+                // send join message to server
+                console.log('Joining room:', roomId, 'as user:', userId);
+                send({ type: 'join', playerId: userId });
+        }, [ready, roomId, send, userId]);
 
 	useEffect(() => {
 		if (!showResults && standings.length > 0 && standings.every((s) => s.finished)) {
