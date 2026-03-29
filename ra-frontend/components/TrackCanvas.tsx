@@ -24,10 +24,12 @@ interface Props {
    Per-mode look-up table
 ------------------------------------------------------------ */
 const MODE_STYLE: Record<InputType, { stroke: string; width: number }> = {
-	BASE: { stroke: '#0f172a', width: 2 }, // slate-900
-	PUSH: { stroke: '#f97316', width: 4 }, // orange-500
-	ERS: { stroke: '#38bdf8', width: 5 }, // sky-400
-	CONSERVE: { stroke: '#4ade80', width: 3 }, // green-400
+	RACE: { stroke: '#64748b', width: 2 },
+	ATTACK: { stroke: '#f97316', width: 4 },
+	DEPLOY: { stroke: '#ec4899', width: 5 },
+	HARVEST: { stroke: '#22c55e', width: 3 },
+	XMODE: { stroke: '#06b6d4', width: 5 },
+	ZMODE: { stroke: '#6366f1', width: 4 },
 };
 
 export default function TrackCanvas({ track, cars, positions }: Props) {
@@ -108,7 +110,7 @@ export default function TrackCanvas({ track, cars, positions }: Props) {
 			ctx.fill();
 
 			// outer ring – mode indicator
-			const mode = p.mode ?? 'BASE';
+			const mode = p.mode ?? 'RACE';
 			const { stroke, width } = MODE_STYLE[mode];
 			ctx.lineWidth = width;
 			ctx.strokeStyle = stroke;
@@ -118,5 +120,5 @@ export default function TrackCanvas({ track, cars, positions }: Props) {
 		});
 	}, [cars, positions, trackPts]);
 
-	return <canvas ref={ref} className="h-full w-full rounded bg-neutral-900/40" width={1500} height={625} />;
+	return <canvas ref={ref} className="h-full w-full rounded-xl border border-neutral-700 bg-gradient-to-b from-neutral-950 to-neutral-900" width={1500} height={625} />;
 }

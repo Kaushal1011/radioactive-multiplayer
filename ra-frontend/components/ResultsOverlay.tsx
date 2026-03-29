@@ -56,7 +56,7 @@ export default function ResultsOverlay({ open, standings, onClose }: Props) {
 				{/* --- header with trophy -------------------------------- */}
 				<DialogHeader className="items-center gap-2 pb-4">
 					<Trophy className="h-9 w-9 animate-bounce text-yellow-400" />
-					<DialogTitle className="text-center text-3xl font-extrabold">Race&nbsp;Finished!</DialogTitle>
+					<DialogTitle className="text-center text-3xl font-extrabold">Chequered Flag</DialogTitle>
 				</DialogHeader>
 
 				{/* --- winner callout ------------------------------------ */}
@@ -94,7 +94,7 @@ export default function ResultsOverlay({ open, standings, onClose }: Props) {
 
 				{/* --- close btn ---------------------------------------- */}
 				<Button variant="secondary" className="mt-5 w-full bg-red-600 hover:bg-red-500" onClick={onClose}>
-					Continue
+					Return to garage
 				</Button>
 			</DialogContent>
 		</Dialog>

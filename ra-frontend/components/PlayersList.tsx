@@ -24,8 +24,8 @@ export default function PlayersList({ cars, standings = [], meId, maxLaps }: Pro
 	const orderedIds = standings.length ? standings.map((s) => s.id) : Object.keys(cars).sort();
 
 	return (
-		<Card className="h-full overflow-y-auto border border-neutral-800 bg-neutral-900/50 backdrop-blur-md">
-			<CardHeader className="pb-2 text-lg font-semibold">Drivers</CardHeader>
+		<Card className="h-full overflow-y-auto border border-neutral-800 bg-neutral-900/70 text-white backdrop-blur-md">
+			<CardHeader className="pb-2 text-lg font-semibold">Live Classification</CardHeader>
 			<CardContent className="flex flex-col gap-3 py-2">
 				{orderedIds.length === 0 && <p className="text-sm text-muted-foreground">Waiting…</p>}
 
@@ -34,7 +34,7 @@ export default function PlayersList({ cars, standings = [], meId, maxLaps }: Pro
 					const standing = standings.find((s) => s.id === id);
 
 					// progress within the current lap (0‑100%)
-					const lapProgressPct = standing ? ((standing.progress % standing.totalDist) / standing.totalDist) * 100 : 0;
+					const lapProgressPct = standing && standing.totalDist > 0 ? (standing.progress / standing.totalDist) * 100 : 0;
 
 					return (
 						<div
