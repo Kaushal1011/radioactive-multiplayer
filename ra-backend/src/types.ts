@@ -1,5 +1,5 @@
 
-export type InputType = "BASE" | "PUSH" | "ERS" | "CONSERVE";
+export type InputType = "RACE" | "ATTACK" | "DEPLOY" | "HARVEST" | "XMODE" | "ZMODE";
 
 export type ClientMsg =
 	| { type: "join"; playerId: string; }

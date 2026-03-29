@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export type InputType = "BASE" | "PUSH" | "ERS" | "CONSERVE";
+export type InputType = "RACE" | "ATTACK" | "DEPLOY" | "HARVEST" | "XMODE" | "ZMODE";
 
 export type ClientMsg =
 	| { type: "join"; playerId: string; }
@@ -60,8 +60,6 @@ function colorFromId(id: string) {
 	return `hsl(${hue} 80% 60%)`;
 }
 
-/* ---------- util ---------- */
-const randColor = () => `hsl(${Math.floor(Math.random() * 360)} 80% 60%)`;
 
 /* ------------------------------------------------------------------
    useRaceSocket – the simplest possible WebSocket hook

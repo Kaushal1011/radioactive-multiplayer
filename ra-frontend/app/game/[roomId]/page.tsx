@@ -9,7 +9,7 @@ import CommandPanel from '@/components/CommandPanel';
 import PlayersList from '@/components/PlayersList';
 import TelemetryBar from '@/components/TelemetryBar';
 import TrackCanvas from '@/components/TrackCanvas';
-import { useRaceSocket } from '@/hooks/useRaceSocket';
+import { useRaceSocket, type InputType } from '@/hooks/useRaceSocket';
 import ResultsOverlay from '@/components/ResultsOverlay';
 import { useRouter } from 'next/navigation';
 
@@ -97,12 +97,12 @@ export default function RacePage({ params }: Props) {
 		send({ type: 'ready', playerId: userId });
 	}
 
-	const handleRadio = (cmd: string) => {
+	const handleRadio = (cmd: InputType) => {
 		send({ type: 'input', playerId: userId, input: cmd });
 	};
 
 	return (
-		<div className="flex min-h-screen flex-col bg-gradient-to-b from-black via-neutral-950 to-black">
+		<div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top,#1e293b_0%,#020617_45%,#000000_100%)]">
 			{countdownDisplay !== null && (
 				<div className="fixed top-20 left-1/2 -translate-x-1/2 transform text-6xl font-bold text-white z-50 bg-black/0 px-6 py-2 rounded-xl shadow-xl">
 					{countdownDisplay}
@@ -120,14 +120,14 @@ export default function RacePage({ params }: Props) {
 					</Button>
 				</div>
 				<div className="flex items-center gap-2">
-					Lap {curLap} / {maxLaps ?? '--'}
+					Lap {Math.min(curLap + 1, maxLaps || curLap + 1)} / {maxLaps ?? '--'}
 				</div>
 
 				<span className="text-sm text-muted-foreground">Room {roomId}</span>
 			</header>
 
 			{/* main grid */}
-			<div className="grid flex-1 grid-cols-[260px_1fr_360px] grid-rows-[1fr_auto] gap-4 p-4">
+			<div className="grid flex-1 grid-cols-1 gap-4 p-4 xl:grid-cols-[300px_1fr_380px] xl:grid-rows-[1fr_auto]">
 				<CommandPanel onSend={handleRadio} />
 
 				<Suspense fallback={<div className="rounded bg-neutral-900/40" />}>
@@ -135,7 +135,7 @@ export default function RacePage({ params }: Props) {
 				</Suspense>
 
 				{ready && me ? <PlayersList cars={cars} standings={standings} maxLaps={maxLaps} meId={userId ?? undefined} /> : null}
-				<div className="col-span-3">
+				<div className="xl:col-span-3">
 					<TelemetryBar car={me} />
 				</div>
 			</div>
