@@ -225,9 +225,9 @@ export class RoomDO implements DurableObject {
 			if (a.finished && b.finished) {
 				return (a.finishedAt || 0) - (b.finishedAt || 0) || b.totalDist - a.totalDist;
 			} else if (b.finished) {
-				return 1; // a finished, b not
+				return 1; // b finished, a not
 			} else if (a.finished) {
-				return -1; // b finished, a not
+				return -1; // a finished, b not
 			} else {
 				return b.totalDist - a.totalDist; // both not finished, sort by distance
 			}
