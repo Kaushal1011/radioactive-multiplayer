@@ -1,3 +1,4 @@
+import type { Mode } from './physics';
 
 export type InputType = "RACE" | "ATTACK" | "DEPLOY" | "HARVEST" | "XMODE" | "ZMODE";
 
@@ -13,6 +14,9 @@ export type ServerMsg =
 export interface PlayerSnapshot {
 	x: number;
 	y: number;
+	v: number;        // current speed (m/s)
+	ers: number;      // battery / ERS charge (0-100)
+	mode: Mode;       // current driving mode
 }
 
 interface Standing {
@@ -23,4 +27,3 @@ interface Standing {
 	finished: boolean;
 	finishedAt?: number | null; // timestamp when finished
 }
-
