@@ -289,7 +289,7 @@ export class RoomDO implements DurableObject {
 			players: Object.fromEntries(
 				[...this.room.players.values()].map(p => [
 					p.id,
-					{ x: p.x, y: p.y, v: p.v, ers: p.battery, mode: p.mode }
+					p.snapshot()
 				])
 			),
 			standings: this.room.standings,      // << NEW – already ordered
