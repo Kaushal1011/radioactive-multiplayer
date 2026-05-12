@@ -12,6 +12,7 @@ import TrackCanvas from '@/components/TrackCanvas';
 import { useRaceSocket, type InputType } from '@/hooks/useRaceSocket';
 import ResultsOverlay from '@/components/ResultsOverlay';
 import { useRouter } from 'next/navigation';
+import { useKonamiCode } from '@/hooks/useKonamiCode';
 
 type Props = {
 	params: Promise<{ roomId: string }>; // <- Next.js injects this
@@ -25,6 +26,7 @@ export default function RacePage({ params }: Props) {
 	const [track, setTrack] = useState<string>('monza'); // default track
 	const [countdownDisplay, setCountdownDisplay] = useState<number | null>(null);
 	const [showResults, setShowResults] = useState(false);
+  const nuclearMode = useKonamiCode();
 	const Router = useRouter();
 	// ensure roomId is set correctly
 
@@ -103,7 +105,18 @@ export default function RacePage({ params }: Props) {
 
 	return (
 		<div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top,#1e293b_0%,#020617_45%,#000000_100%)]">
-			{countdownDisplay !== null && (
+      {/* Easter Egg: Nuclear Mode overlay */}
+      {nuclearMode && (
+        <div className="fixed inset-0 z-[999] pointer-events-none flex items-center justify-center">
+          <div className="absolute inset-0 bg-green-500/20 animate-pulse" />
+          <div className="relative text-center animate-bounce">
+            <p className="text-8xl">RADIOACTIVE</p>
+            <p className="mt-4 text-3xl font-black uppercase tracking-widest text-green-400">Nuclear Mode Activated</p>
+            <p className="mt-2 text-sm text-green-300/80">+9000 horsepower unlocked</p>
+          </div>
+        </div>
+      )}
+       {countdownDisplay !== null && (
 				<div className="fixed top-20 left-1/2 -translate-x-1/2 transform text-6xl font-bold text-white z-50 bg-black/0 px-6 py-2 rounded-xl shadow-xl">
 					{countdownDisplay}
 				</div>
